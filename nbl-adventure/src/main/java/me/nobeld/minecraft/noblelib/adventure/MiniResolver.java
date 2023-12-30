@@ -58,6 +58,19 @@ public class MiniResolver {
         MiniMessage minimessage = MiniMessage.builder().tags(baseBuilder(player).build()).build();
         return minimessage.deserialize(text);
     }
+    public Component formatAll(String text, String name) {
+        MiniMessage minimessage = MiniMessage.builder().tags(TagResolver.builder()
+                        .resolver(StandardTags.defaults())
+                        .resolver(prefix())
+                        .resolver(hasPlaceholderAPI  ? papiTag(null) : noPapiTag())
+                        .resolver(playerName(name))
+                        .build())
+                .build();
+        return minimessage.deserialize(text);
+    }
+    public Component formatAll(String text) {
+        return formatAll(text, (Player) null);
+    }
     public Component formatExtra(String text, Player player, Component extra) {
         MiniMessage minimessage = MiniMessage.builder().tags(baseBuilder(player).build()).build();
         return minimessage.deserialize(text, Placeholder.component("extra", extra));
@@ -68,9 +81,6 @@ public class MiniResolver {
     }
     public Component formatLoc(String text, Player player, Location location) {
         return formatLoc(text, player, location.getWorld().getName(), (int) location.getX(), (int) location.getY(), (int) location.getZ());
-    }
-    public Component formatServer(String text) {
-        return formatAll(text, null);
     }
     public Component formatCommand(CommandSender sender, String text) {
         Player player1 = null;
