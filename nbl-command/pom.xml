@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>nbl-model</artifactId>
+    <artifactId>nbl-command</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -30,10 +30,28 @@
 
     <dependencies>
         <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>nbl-adventure</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.20.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>cloud.commandframework</groupId>
+            <artifactId>cloud-paper</artifactId>
+            <version>1.8.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>cloud.commandframework</groupId>
+            <artifactId>cloud-minecraft-extras</artifactId>
+            <version>1.8.4</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
