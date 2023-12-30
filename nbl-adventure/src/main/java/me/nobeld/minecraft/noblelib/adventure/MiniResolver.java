@@ -1,6 +1,7 @@
 package me.nobeld.minecraft.noblelib.adventure;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.nobeld.minecraft.noblelib.AdventureLib;
 import me.nobeld.minecraft.noblelib.time.TimeContainer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -17,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
 import static me.nobeld.minecraft.noblelib.AdventureLib.*;
 
 public class MiniResolver {
+    private final AdventureLib lib;
+    public MiniResolver(AdventureLib lib) {
+        this.lib = lib;
+    }
     public static String getLegacy(Component component) {
         LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.builder()
                 .character('§')
@@ -26,37 +31,53 @@ public class MiniResolver {
                 .build();
         return legacySerializer.serialize(component);
     }
-    private static TagResolver.Builder baseBuilder(Player player) {
+    public static Component formatMini(String text) {
+        MiniMessage minimessage = MiniMessage.builder().tags(TagResolver.builder()
+                        .resolver(StandardTags.defaults())
+                        .resolver(hasPlaceholderAPI  ? papiTag(null) : noPapiTag())
+                        .build())
+                .build();
+        return minimessage.deserialize(text);
+    }
+    public static Component formatMini(String text, Player player) {
+        MiniMessage minimessage = MiniMessage.builder().tags(TagResolver.builder()
+                        .resolver(StandardTags.defaults())
+                        .resolver(hasPlaceholderAPI  ? papiTag(player) : noPapiTag())
+                        .build())
+                .build();
+        return minimessage.deserialize(text);
+    }
+    private TagResolver.Builder baseBuilder(Player player) {
         return TagResolver.builder()
                 .resolver(StandardTags.defaults())
                 .resolver(prefix())
                 .resolver(hasPlaceholderAPI  ? papiTag(player) : noPapiTag())
                 .resolver(player != null  ? playerName(player) : noPlayerName());
     }
-    public static Component formatAll(String text, Player player) {
+    public Component formatAll(String text, Player player) {
         MiniMessage minimessage = MiniMessage.builder().tags(baseBuilder(player).build()).build();
         return minimessage.deserialize(text);
     }
-    public static Component formatExtra(String text, Player player, Component extra) {
+    public Component formatExtra(String text, Player player, Component extra) {
         MiniMessage minimessage = MiniMessage.builder().tags(baseBuilder(player).build()).build();
         return minimessage.deserialize(text, Placeholder.component("extra", extra));
     }
-    public static Component formatLoc(String text, Player player, String world, int x, int y, int z) {
+    public Component formatLoc(String text, Player player, String world, int x, int y, int z) {
         MiniMessage minimessage = MiniMessage.builder().tags(baseBuilder(player).resolver(locTag(world, x, y, z)).build()).build();
         return minimessage.deserialize(text);
     }
-    public static Component formatLoc(String text, Player player, Location location) {
+    public Component formatLoc(String text, Player player, Location location) {
         return formatLoc(text, player, location.getWorld().getName(), (int) location.getX(), (int) location.getY(), (int) location.getZ());
     }
-    public static Component formatServer(String text) {
+    public Component formatServer(String text) {
         return formatAll(text, null);
     }
-    public static Component formatCommand(CommandSender sender, String text) {
+    public Component formatCommand(CommandSender sender, String text) {
         Player player1 = null;
         if (sender instanceof Player player) player1 = player;
         return formatAll(text, player1);
     }
-    public static Component formatColor(String text, Player player) {
+    public Component formatColor(String text, Player player) {
         MiniMessage minimessage = MiniMessage.builder()
                 .tags(TagResolver.builder()
                         .resolver(StandardTags.color())
@@ -71,10 +92,10 @@ public class MiniResolver {
                 .build();
         return minimessage.deserialize(text);
     }
-    public static Component formatTime(String text, Player player, TimeContainer time) {
+    public Component formatTime(String text, Player player, TimeContainer time) {
         return formatTime(text, player, time.getDay(), time.getHour(), time.getMin(), time.getSec());
     }
-    public static Component formatTime(String text, Player player, int d, int h, int m, int s) {
+    public Component formatTime(String text, Player player, int d, int h, int m, int s) {
         MiniMessage minimessage = MiniMessage.builder().tags(baseBuilder(player)
                         .resolver(counterTag(d, h, m, s))
                         .resolver(counter2Tag(d, h, m, s))
@@ -86,15 +107,15 @@ public class MiniResolver {
                 .build();
         return minimessage.deserialize(text);
     }
-    public static Component formatSleep(String text, Player player, String name, int rest, int need) {
+    public Component formatSleep(String text, Player player, String name, int rest, int need) {
         MiniMessage minimessage = MiniMessage.builder().tags(baseBuilder(player).resolver(sleepTag(name, rest, need)).build()).build();
         return minimessage.deserialize(text);
     }
-    public static Component formatLive(String text, Player player, String name, int used, int total) {
+    public Component formatLive(String text, Player player, String name, int used, int total) {
         MiniMessage minimessage = MiniMessage.builder().tags(baseBuilder(player).resolver(liveTag(name, used, total)).build()).build();
         return minimessage.deserialize(text);
     }
-    public static Component formatDamage(String text, String name, String damage) {
+    public Component formatDamage(String text, String name, String damage) {
         MiniMessage minimessage = MiniMessage.builder()
                 .tags(TagResolver.builder()
                         .resolver(StandardTags.defaults())
@@ -107,7 +128,7 @@ public class MiniResolver {
                 .build();
         return minimessage.deserialize(text);
     }
-    public static Component formatTotem(String text, Player player, String name, int amount, int probMin, int probMax) {
+    public Component formatTotem(String text, Player player, String name, int amount, int probMin, int probMax) {
         MiniMessage minimessage = MiniMessage.builder()
                 .tags(TagResolver.builder()
                         .resolver(StandardTags.defaults())
@@ -121,9 +142,9 @@ public class MiniResolver {
                 .build();
         return minimessage.deserialize(text);
     }
-    private static @NotNull TagResolver prefix() {
+    private @NotNull TagResolver prefix() {
         MiniMessage miniMessage = MiniMessage.builder().tags(TagResolver.standard()).build();
-        final Component component = miniMessage.deserialize(prefixEnabled ? prefixString + " " : "");
+        final Component component = miniMessage.deserialize(lib.usePrefix() ? lib.getPrefix() + " " : "");
         return TagResolver.resolver("prefix", Tag.selfClosingInserting(component));
     }
     private static @NotNull TagResolver playerName(final @NotNull Player player) {

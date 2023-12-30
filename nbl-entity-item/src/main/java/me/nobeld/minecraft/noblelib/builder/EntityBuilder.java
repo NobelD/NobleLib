@@ -19,7 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.List;
 
-import static me.nobeld.minecraft.noblelib.adventure.MiniResolver.formatServer;
+import static me.nobeld.minecraft.noblelib.adventure.MiniResolver.formatMini;
+
 
 public class EntityBuilder<T extends LivingEntity> {
     protected T entity;
@@ -64,7 +65,7 @@ public class EntityBuilder<T extends LivingEntity> {
     }
     public EntityBuilder<T> setName(String text) {
         if (text != null)
-            MobExtra.setName(this.entity, formatServer(text));
+            MobExtra.setName(this.entity, formatMini(text));
         return this;
     }
     public EntityBuilder<T> setName(Component component, boolean show) {

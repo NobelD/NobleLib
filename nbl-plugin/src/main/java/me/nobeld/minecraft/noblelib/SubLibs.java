@@ -9,7 +9,16 @@ public class SubLibs {
     private final ModelLib modelLib;
     private final CommandLib commandLib;
     public SubLibs(JavaPlugin plugin) {
-        adventure = new AdventureLib(plugin);
+        adventure = new AdventureLib(plugin) {
+            @Override
+            public String getPrefix() {
+                return "";
+            }
+            @Override
+            public boolean usePrefix() {
+                return false;
+            }
+        };
         entityItem = new EntityItemLib(plugin);
         modelLib = new ModelLib(plugin);
         commandLib = new CommandLib(adventure.getMethods());

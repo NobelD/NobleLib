@@ -2,27 +2,23 @@ package me.nobeld.minecraft.noblelib;
 
 import io.papermc.lib.PaperLib;
 import me.nobeld.minecraft.noblelib.adventure.AdvBase;
+import me.nobeld.minecraft.noblelib.adventure.MiniResolver;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public class AdventureLib {
+public abstract class AdventureLib {
     private final JavaPlugin plugin;
     private BukkitAudiences adventure;
-    public static boolean prefixEnabled;
-    public static String prefixString;
     public static boolean hasPlaceholderAPI = hasClass("me.clip.placeholderapi.PlaceholderAPI");
     private final AdvBase methods;
+    private final MiniResolver resolvers;
     public static final boolean hasPaper = PaperLib.isPaper();
-    public AdventureLib(JavaPlugin plugin, boolean usePrefix, String prefix) {
+    public AdventureLib(JavaPlugin plugin) {
         this.plugin = plugin;
-        prefixEnabled = usePrefix;
-        prefixString = prefix;
         enable();
         methods = new AdvBase(this);
-    }
-    public AdventureLib(JavaPlugin plugin) {
-        this(plugin, false, "");
+        resolvers = new MiniResolver(this);
     }
     public @NotNull BukkitAudiences adventure() {
         if (adventure == null) {
@@ -49,5 +45,10 @@ public class AdventureLib {
     }
     public AdvBase getMethods() {
         return methods;
+    }
+    public abstract String getPrefix();
+    public abstract boolean usePrefix();
+    public MiniResolver getResolvers() {
+        return resolvers;
     }
 }

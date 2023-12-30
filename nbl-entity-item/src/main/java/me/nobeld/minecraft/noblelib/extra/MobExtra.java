@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static me.nobeld.minecraft.noblelib.EntityItemLib.hasPaper;
-import static me.nobeld.minecraft.noblelib.adventure.MiniResolver.formatServer;
+import static me.nobeld.minecraft.noblelib.adventure.MiniResolver.formatMini;
 import static me.nobeld.minecraft.noblelib.adventure.MiniResolver.getLegacy;
 
 public class MobExtra {
@@ -43,7 +43,7 @@ public class MobExtra {
         }
     }
     public static void setName(Entity entity , String text) {
-        Component component = formatServer(text);
+        Component component = formatMini(text);
         setName(entity, component);
     }
     public static boolean isEntityLimit(Location loc, int radius, int limit, Class<? extends LivingEntity> clazz) {
