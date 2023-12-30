@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.function.Function;
 
 public abstract class OptionCommand extends BaseCommand {
-    private final Function<Command.Builder<CommandSender>, Command.Builder<CommandSender>> base;
     private final List<BaseCommand> subCommand;
-    public OptionCommand(Function<Command.Builder<CommandSender>, Command.Builder<CommandSender>> builder, Function<Command.Builder<CommandSender>, Command.Builder<CommandSender>> base, List<BaseCommand> subCommand) {
+    public OptionCommand(Function<Command.Builder<CommandSender>, Command.Builder<CommandSender>> builder, List<BaseCommand> subCommand) {
         super(builder);
-        this.base = base;
         this.subCommand = subCommand;
     }
     @Override
@@ -28,7 +26,7 @@ public abstract class OptionCommand extends BaseCommand {
         });
     }
     public Command.Builder<CommandSender> getBaseBuilder(Command.Builder<CommandSender> base) {
-        return this.base.apply(base);
+        return this.builder.apply(base);
     }
     public List<BaseCommand> getSubCommand() {
         return subCommand;

@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import java.util.function.Function;
 
 public abstract class BaseCommand {
-    private final Function<Command.Builder<CommandSender>, Command.Builder<CommandSender>> builder;
+    final Function<Command.Builder<CommandSender>, Command.Builder<CommandSender>> builder;
     public BaseCommand(Function<Command.Builder<CommandSender>, Command.Builder<CommandSender>> builder) {
         this.builder = builder;
     }
