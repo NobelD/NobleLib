@@ -1,0 +1,8 @@
+name: NobleLib
+version: ${project.version}
+main: me.nobeld.minecraft.noblelib.NobleLibPlugin
+description: Simple lib for the NobelD's projects
+author: NobelD
+website: https://github.com/NobelD/NobleLib
+api-version: 1.17
+load: STARTUP
