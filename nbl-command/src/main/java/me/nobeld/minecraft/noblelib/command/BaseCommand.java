@@ -14,7 +14,7 @@ public abstract class BaseCommand {
     public BaseCommand(Function<Command.Builder<CommandSender>, Command.Builder<CommandSender>> builder) {
         this.builder = builder;
     }
-    public void sendMsg(CommandContext<CommandSender> c, Component msg) {
+    public static void sendMsg(CommandContext<CommandSender> c, Component msg) {
         CommandSender sender = c.getSender();
         CommandLib.getAdventure().audienceSender(sender).sendMessage(msg);
     }
